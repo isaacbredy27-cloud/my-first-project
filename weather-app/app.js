@@ -1,4 +1,5 @@
 const DEFAULT = { name: "Boca Raton", lat: 26.3683, lon: -80.1289 };
+const NAME = "Isaac";
 
 const CODES = {
   0: ["Clear", "☀️", "🌙"],
@@ -62,11 +63,6 @@ function render(data) {
   $("wind").textContent = `${Math.round(c.wind_speed_10m)} mph`;
   $("uv").textContent = Math.round(d.uv_index_max[0]);
 
-  // Background theme
-  const code = c.weather_code;
-  document.body.className =
-    !c.is_day ? "night" : code >= 51 ? "rainy" : code >= 2 ? "cloudy" : "";
-
   // Next 24 hours, starting at the current hour
   const start = Math.max(0, h.time.findIndex((t) => t >= c.time.slice(0, 13)));
   $("hourly").innerHTML = h.time
@@ -117,5 +113,23 @@ $("search").addEventListener("submit", async (e) => {
     $("desc").textContent = "Search failed";
   }
 });
+
+// Greeting
+const hour = new Date().getHours();
+const part = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+$("greeting").textContent = `${part}, ${NAME}`;
+
+// Theme switcher: light, dark, or follow the system setting
+function setTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  document.querySelectorAll(".themes button").forEach((b) =>
+    b.classList.toggle("active", b.dataset.theme === theme)
+  );
+  try { localStorage.setItem("theme", theme); } catch {}
+}
+document.querySelectorAll(".themes button").forEach((b) =>
+  b.addEventListener("click", () => setTheme(b.dataset.theme))
+);
+setTheme(document.documentElement.dataset.theme);
 
 load(DEFAULT);

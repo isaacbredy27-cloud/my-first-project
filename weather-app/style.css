@@ -1,17 +1,57 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { min-height: 100%; background: #2c3e70; }
+/* Light theme (default) */
+:root {
+  color-scheme: light;
+  --text: #1c1c1e;
+  --bg: linear-gradient(160deg, #a1c4fd 0%, #c2e9fb 50%, #e0f0ff 100%);
+  --bg-solid: #e0f0ff;
+  --glass: rgba(255, 255, 255, 0.45);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --line: rgba(0, 0, 0, 0.1);
+  --track: rgba(0, 0, 0, 0.1);
+  --shadow: rgba(31, 38, 135, 0.12);
+  --active: rgba(255, 255, 255, 0.9);
+}
+
+/* Dark theme */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --text: #fff;
+  --bg: linear-gradient(160deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+  --bg-solid: #2c5364;
+  --glass: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --line: rgba(255, 255, 255, 0.15);
+  --track: rgba(255, 255, 255, 0.2);
+  --shadow: rgba(0, 0, 0, 0.3);
+  --active: rgba(255, 255, 255, 0.22);
+}
+
+/* System theme follows the device setting */
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] {
+    color-scheme: dark;
+    --text: #fff;
+    --bg: linear-gradient(160deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+    --bg-solid: #2c5364;
+    --glass: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --line: rgba(255, 255, 255, 0.15);
+    --track: rgba(255, 255, 255, 0.2);
+    --shadow: rgba(0, 0, 0, 0.3);
+    --active: rgba(255, 255, 255, 0.22);
+  }
+}
+
+html { min-height: 100%; background: var(--bg-solid); }
 
 body {
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
-  color: #fff;
-  background: linear-gradient(160deg, #4a90e2 0%, #6a5acd 55%, #2c3e70 100%);
-  transition: background 0.6s ease;
+  color: var(--text);
+  background: var(--bg);
 }
-body.night { background: linear-gradient(160deg, #0f2027 0%, #203a43 50%, #2c5364 100%); }
-body.cloudy { background: linear-gradient(160deg, #757f9a 0%, #5d6b85 50%, #3a4660 100%); }
-body.rainy { background: linear-gradient(160deg, #3a6073 0%, #2f4a5c 50%, #16222a 100%); }
 
 .app {
   max-width: 480px;
@@ -23,13 +63,13 @@ body.rainy { background: linear-gradient(160deg, #3a6073 0%, #2f4a5c 50%, #16222
 }
 
 .glass {
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
   border-radius: 22px;
   padding: 16px;
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 32px var(--shadow);
 }
 
 h2 {
@@ -40,7 +80,7 @@ h2 {
   opacity: 0.7;
   padding-bottom: 10px;
   margin-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid var(--line);
 }
 
 .search { padding: 0; border-radius: 14px; }
@@ -48,14 +88,30 @@ h2 {
   width: 100%;
   padding: 12px 16px;
   font-size: 16px;
-  color: #fff;
+  color: var(--text);
   background: transparent;
   border: none;
   outline: none;
 }
-.search input::placeholder { color: rgba(255, 255, 255, 0.7); }
+.search input::placeholder { color: var(--text); opacity: 0.55; }
 
 .current { text-align: center; padding: 28px 16px; background: transparent; border: none; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.greeting { font-size: 22px; font-weight: 600; }
+
+.themes { display: flex; padding: 3px; border-radius: 12px; gap: 2px; }
+.themes button {
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  border-radius: 9px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.themes button.active { background: var(--active); box-shadow: 0 1px 4px var(--shadow); font-weight: 600; }
+
 .current h1 { font-size: 32px; font-weight: 400; }
 .temp { font-size: 96px; font-weight: 200; line-height: 1; margin: 4px 0; }
 .desc { font-size: 20px; opacity: 0.9; }
@@ -74,17 +130,17 @@ h2 {
   gap: 8px;
   padding: 10px 0;
   font-size: 17px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid var(--line);
 }
 .daily li:last-child { border-bottom: none; }
 .daily .icon { font-size: 22px; text-align: center; }
 .range { display: flex; align-items: center; gap: 10px; justify-content: flex-end; }
 .range .lo { opacity: 0.6; }
-.bar { flex: 1; max-width: 110px; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.2); position: relative; }
+.bar { flex: 1; max-width: 110px; height: 4px; border-radius: 2px; background: var(--track); position: relative; }
 .bar span { position: absolute; top: 0; bottom: 0; border-radius: 2px; background: linear-gradient(90deg, #8fd3f4, #fbc531, #f39c12); }
 
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .tile p { font-size: 30px; font-weight: 300; }
 
 .credit { text-align: center; font-size: 12px; opacity: 0.7; }
-.credit a { color: #fff; }
+.credit a { color: var(--text); }
